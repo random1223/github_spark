@@ -25,6 +25,7 @@ object ConsumerSpent {
     val lines = sc.textFile("customer-orders.csv")
 
 
+
     // Convert each line to a string, split it out by tabs, and extract the third field.
     // (The file format is userID, movieID, rating, timestamp)
     val allLines = lines.map(dataProcessing)

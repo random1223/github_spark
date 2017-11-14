@@ -1,6 +1,8 @@
 import org.apache.log4j._
 import org.apache.spark._
 
+import scala.io.Source
+
 /** Count up how many of each star rating exists in the MovieLens 100K data set. */
 object BookCount {
 
@@ -21,13 +23,14 @@ object BookCount {
   def main(args: Array[String]) {
    
     // Set the log level to only print errors
-//    Logger.getLogger("org").setLevel(Level.ERROR)
+    Logger.getLogger("org").setLevel(Level.ERROR)
         
     // Create a SparkContext using every core of the local machine, named RatingsCounter
     val sc = new SparkContext("local[*]", "RatingsCounter")
    
     // Load up each line of the ratings data into an RDD
-    val lines = sc.textFile("book.txt")
+//    println(this.getClass.getResource("book.txt"))
+    val lines = sc.textFile("book.txt")  //wil need to copy it to the target folder manually
 
     // Convert each line to a string, split it out by tabs, and extract the third field.
     // (The file format is userID, movieID, rating, timestamp)
@@ -35,7 +38,7 @@ object BookCount {
 
     allLines = allLines.map(x => {x.toLowerCase})
 
-    val distinctWords = allLines.map(x=>(x, 1)).reduceByKey((x,y) => {(x+y)}).map(x=>(x._2, x._1)).sortByKey()
+    val distinctWords = allLines.map(x=>(x, 1)).reduceByKey((x,y) => {(x+y)}).map(x=>(x._2, x._1)).sortByKey().partitionBy(new HashPartitioner(1000))
 
     val result = distinctWords.collect()
 
