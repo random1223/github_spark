@@ -9,7 +9,7 @@ import org.apache.spark.streaming.StreamingContext._
 /** Listens to a stream of Tweets and keeps track of the most popular
  *  hashtags over a 5 minute window.
  */
-object PopularHashtags {
+object StreamTwitterPopularHashtags {
 
     /** Makes sure only ERROR messages get logged to avoid log spam. */
   def setupLogging() = {
